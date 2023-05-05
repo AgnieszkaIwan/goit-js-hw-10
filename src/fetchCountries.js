@@ -14,3 +14,9 @@ export const fetchCountries = name => {
       throw error;
     });
 };
+
+// export const fetchCountries = name => {
+//   return fetch(
+//     `${API_URL}/name/${name}?fields=name,capital,population,flags,languages`
+//   ).then(res => res.json());
+// };
