@@ -12,7 +12,14 @@ const countryInfo = document.querySelector('.country-info');
 searchEl.addEventListener(
   'input',
   debounce(async ev => {
-    const countries = await fetchCountries(ev.target.value);
+    const countryName = ev.target.value;
+
+    if (countryName === '') {
+      countryListEl.innerHTML = '';
+      countryInfo.innerHTML = '';
+      return;
+    }
+    const countries = await fetchCountries(countryName);
     if (countries.length > 10) {
       Notify.info('Too many matches found. Please enter a more specific name.');
     } else {
