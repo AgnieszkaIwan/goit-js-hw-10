@@ -1,17 +1,37 @@
 import './css/styles.css';
 import { fetchCountries } from './fetchCountries.js';
 import debounce from 'lodash.debounce';
-import Notiflix from 'notiflix';
+import { Notify } from 'notiflix';
 
 const DEBOUNCE_DELAY = 300;
 
 const searchEl = document.getElementById('search-box');
 const countryListEl = document.querySelector('.country-list');
+const countryInfo = document.querySelector('.country-info');
 
 searchEl.addEventListener(
   'input',
   debounce(async ev => {
     const countries = await fetchCountries(ev.target.value);
+    if (countries.length > 10) {
+      Notify.info('Too many matches found. Please enter a more specific name.');
+    } else {
+      countryListEl.innerHTML = countries
+        .map(
+          country =>
+            `<li><img src="${country.flags.png}"/> ${country.name.common}</li>`
+        )
+        .join('');
+    }
+    if (countries.length === 1) {
+      countryInfo.innerHTML = `
+          <p>Capital: ${countries[0].capital}</p>
+          <p>Population: ${countries[0].population}</p>
+          <p>Languages: ${Object.values(countries[0].languages).join(
+            ','
+          )}</p>     
+        `;
+    }
 
     console.log(countries);
   }, DEBOUNCE_DELAY)
